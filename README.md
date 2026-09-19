@@ -28,4 +28,4 @@ Para instalar o SGE, verificar se o .env está devidamente configurado, caso sim
 
 Apos isso basta acessar http://localhost:8000/docs .
 
-# 
+## [Licença básica para o projeto](LICENSE)
