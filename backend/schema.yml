@@ -1,0 +1,8 @@
+openapi: 3.0.3
+info:
+  title: Api de Gerenciamento da Lanchonete Sabor & Cia.
+  version: 1.0.0
+  description: "Projeto com objetivo de desenvolver um sistema web para oGerenciamento
+    da Lanchonete Sabor & Cia. \n \n Programa feitor port Arthur Nunes - 2026"
+paths: {}
+components: {}
