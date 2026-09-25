@@ -1,5 +1,5 @@
 """
-URL configuration for LanchoneteSaborECia project.
+URL configuration for setting project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.1/topics/http/urls/
@@ -14,19 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path, include
-
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from django.contrib import admin
+from django.urls import path
 
 urlpatterns = [
-    #path('/', include('unidade.urls')),
-
-    # schema.yml contém todas as informações de rotas do projeto para o Swagger/Redoc.
-    # Caminho para o download do schema.yml.
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-
-    
-    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
-    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-
+    path('admin/', admin.site.urls),
 ]

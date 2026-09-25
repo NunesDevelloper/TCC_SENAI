@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd ./src
+
 #aplica a migrate do Django de forma silenciosa e sem o Django pedir qualquer tipo de input
 python manage.py migrate --noinput --verbosity 0
 

@@ -1,8 +1,7 @@
-# Trabalho e conclusão curso de Desenvolvimento de sistema do Sesi/Senai.
-### Feitor por: Arthur Nunes de Carvalho do 3°Ds.
+# Lanchonete Sabor & Cia
 
 # Descrição
-Trabalho para finalizar o cursor de desenvolvimento de sistema onde deve se concluir todos os [requisitos](docs/solicitação de trabalho.pdf). do mesmo. Sendo esse um trabalho fullstack que vai deste da interpretação da [analise de requisito](docs/solicitação de trabalho.pdf) até o frontend, backend, banco. 
+Sitema projetado para o gerenciamente de pedidos, estoques e fucionario para a aLanchonete Sabor & Cia.  
 
 # Tecnologias usadas:
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
@@ -29,3 +28,9 @@ Para instalar o SGE, verificar se o .env está devidamente configurado, caso sim
 Apos isso basta acessar http://localhost:8000/docs .
 
 ## [Licença básica para o projeto](LICENSE)
+
+## Obs:
+### Projeto meramente fictícios. <br>
+Trabalho para finalizar o cursor de desenvolvimento de sistema onde deve se concluir todos os [requisitos](docs/solicitação de trabalho.pdf). do mesmo. <br>
+Sendo esse um trabalho fullstack que vai deste da interpretação da [analise de requisito](docs/solicitação de trabalho.pdf) até o frontend, backend, banco. <br>
+#### Feitor por: Arthur Nunes de Carvalho do 3°Ds - 2026.
