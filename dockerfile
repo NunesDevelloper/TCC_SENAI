@@ -14,7 +14,7 @@ COPY ./backend/ /backend/
 RUN chmod +x /backend/entrypoint.sh
 
 #toda fez que o docker for estardo ele vai e roda esse script
-ENTRYPOINT ["/backend/entrypoint.sh"]
+#ENTRYPOINT ["/backend/entrypoint.sh"]
 
 EXPOSE 8000
 
