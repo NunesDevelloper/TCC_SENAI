@@ -1,8 +1,8 @@
 # ====== backend ====== 
-FROM python:3.12-slim
+FROM python:3.12-slim as backend
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-PYTHONUNBUFFERED=1 \
+    PYTHONUNBUFFERED=1 
 
 WORKDIR /backend
 
@@ -26,16 +26,23 @@ RUN cd /
 
 
 # ====== frontend - bild ====== 
-FROM node:20
+FROM node:20 as build
 
 WORKDIR /frontend
 
 COPY ./frontend/package*.json /frontend/
 
+#RUN npm install /frontend/package*.json
+
+RUN npm install .
+
+COPY ./frontend/ /frontend/
+
 RUN npm run build
 
+
 # ====== frontend - expose ====== 
-FROM nginx:alpine
+FROM nginx:alpine as expose
 
 COPY --from=build /frontend/dist /usr/share/nginx/html
 
