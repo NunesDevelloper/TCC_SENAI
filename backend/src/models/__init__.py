@@ -12,10 +12,12 @@ from .fucionario import Funcionario
 from .historico_pedidos import HistoricoPedidos
 from .mesa import Mesa
 from .produto import EnumCategoria, Produto
+from .turno import EnumCargo, Turno
 
 __all__ = [
     "carrinho_produto","cliente_endereco","delivre_carrinho","estoque_fornecidor","estoque_produto","EnumMetedoPagamento","Carrinho","Cliente","Combo",
     "CupomDesconto","Delivre","Endereco","EnumUnidadeMedida","Estoque","Fornecedor","Funcionario","HistoricoPedidos","Mesa","EnumCategoria","Produto",
+    "Turno", "EnumCargo"
 ]
 
 Base.metadata.create_all(bind=engine)

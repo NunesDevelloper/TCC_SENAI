@@ -9,42 +9,42 @@ ph = PasswordHasher()
 class Cliente(Base):
     __tablename__ = 'cliente' 
     
-    __id__ = Column(Integer, primary_key=True, autoincrement=True, name="id")
-    __nome__ = Column(String(200), nullable=False, name="nome")
-    __senha__ = Column(String(225), nullable=False, name="senha")
-    __email__ = Column(String(225), nullable=False, name="email")
+    _id = Column(Integer, primary_key=True, autoincrement=True, name="id")
+    _nome = Column(String(200), nullable=False, name="nome")
+    _senha = Column(String(225), nullable=False, name="senha")
+    _email = Column(String(225), nullable=False, name="email", unique=True)
 
     enderecos = relationship("Endereco", secondary=cliente_endereco, backref="clientes")
 
     def __init__(self, nome: str, senha: str, email: str) -> None:
-        self.__nome__ = nome
-        self.__senha__ = ph.hash(senha)
-        self.__email__ = email
+        self._nome = nome
+        self._senha = ph.hash(senha)
+        self._email = email
 
     @property
     def id(self) -> int:
-        return int(self.__id__)
+        return int(self._id)
 
     @property
     def nome(self) -> str:
-        return str(self.__nome__)
+        return str(self._nome)
 
     @nome.setter
     def nome(self, novoNome: str) -> None:
-        self.__nome__ = novoNome
+        self._nome = novoNome
 
-    @property
-    def senha(self, novaSenha: str) -> None:
-        self.__senha__ = ph.hash(novaSenha)
+    
+    def nova_senha(self, novaSenha: str) -> None:
+        self._senha = ph.hash(novaSenha)
 
     def verificarSenha(self, senha: str) -> bool:
-        return ph.verify(self.__senha__ == senha)
+        return ph.verify(self._senha == senha)
 
     @property
     def email(self) -> str:
-        return str(self.__email__)
+        return str(self._email)
 
     @email.setter
     def email(self, novoEmail: str) -> None:
-        self.__nome__ = novoEmail    
+        self._nome = novoEmail    
 

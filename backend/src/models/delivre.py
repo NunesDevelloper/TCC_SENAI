@@ -8,22 +8,21 @@ from .muitas_muitas import delivre_carrinho
 class Delivre(Base):
     __tablename__ = 'delivre'
 
-    __id__ = Column(Integer, primary_key=True, autoincrement=True, name="id")
-    __nome__ = Column(String(255), nullable=True, name="nome")
-
+    _id = Column(Integer, primary_key=True, autoincrement=True, name="id")
+    _nome = Column(String(255), nullable=True, name="nome")
     carrinhos = relationship("Carrinho", secondary=delivre_carrinho, backref="deliveries")
 
     def __init__(self, nome: str = None) -> None:
-        self.__nome__ = nome
+        self._nome= nome
 
     @property
     def id(self) -> int:
-        return int(self.__id__)
+        return int(self._id)
 
     @property
     def nome(self) -> str:
-        return str(self.__nome__) if self.__nome__ is not None else None
+        return str(self._nome) if self.__nome is not None else None
 
     @nome.setter
     def nome(self, novoNome: str) -> None:
-        self.__nome__ = novoNome
+        self._nome = novoNome

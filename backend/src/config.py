@@ -1,15 +1,18 @@
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
+from pathlib import Path
 from os import getenv
 
-load_dotenv()
+path_env = Path(__file__).resolve().parents[2] / ".env"
+
+load_dotenv(path_env)
 
 class ERRO_ENV(Exception):
     def __init__(self, text: str) -> str:
         print(text)
 
 try:
-    DEBUG = bool(getenv("DEBUG", False))
+    DEBUG = getenv("DEBUG")
 except(TypeError):
     raise ERRO_ENV("A var \"DEBUG\" não é do tipo booleano.")
 
@@ -31,14 +34,14 @@ DB_PASSWORD = quote_plus(str(getenv("DB_PASSWORD")))
 DB_IP = "db"
 DB_PORT = 3306
 
-if DEBUG == True:
-    DB_IP = getenv("DB_DATABASE", None)
+if DEBUG == "True":
+    DB_IP = getenv("DB_IP", None)
     if DB_IP == None or DB_IP.strip() == " ":
         raise ERRO_ENV("A var \"DB_IP\" não pode está vazia.")
 
     try:
-        DB_PORT = int(getenv("DB_DATABASE", 3306))
+        DB_PORT = int(getenv("DB_PORT", 3306))
     except(TypeError):
-        raise ERRO_ENV("A var \"DEBUG\" não é do tipo int.")
+        raise ERRO_ENV("A var \"DB_PORT\" não é do tipo int.")
 #endregion
 

@@ -8,43 +8,43 @@ ph = PasswordHasher()
 class Funcionario(Base):
     __tablename__ = 'funcionario'
     
-    __id__ = Column(Integer, primary_key=True, autoincrement=True, name="id")
-    __nome__ = Column(String(120), nullable=False, name="nome")
-    __login__ = Column(String(255), nullable=False, name="login")
-    __senha__ = Column(String(255), nullable=False, name="senha")
+    _id = Column(Integer, primary_key=True, autoincrement=True, name="id")
+    _nome = Column(String(120), nullable=False, name="nome")
+    _login = Column(String(255), nullable=False, name="login")
+    _senha = Column(String(255), nullable=False, name="senha")
     
     turnos = relationship("Turno", backref="funcionario")
 
     def __init__(self, nome: str, login: str, senha: str) -> None:
-        self.__nome__ =  nome
-        self.__login__ = login
-        self.__senha__ = ph.hash(senha)
+        self._nome =  nome
+        self._login = login
+        self._senha = ph.hash(senha)
 
     @property
     def id(self) -> int:
-        return int(self.__id__)
+        return int(self._id)
 
     @property
     def nome(self) -> str:
-        return str(self.__nome__)
+        return str(self._nome)
 
     @nome.setter
     def nome(self, novoNome: str) -> None:
-        self.__nome__ = novoNome
+        self._nome = novoNome
 
     @property
     def senha(self, novaSenha: str) -> None:
-        self.__senha__ = ph.hash(novaSenha)
+        self._senha = ph.hash(novaSenha)
 
     def verificarSenha(self, senha: str) -> bool:
-        return ph.verify(self.__senha__ == senha)
+        return ph.verify(self._senha == senha)
 
     @property
     def login(self) -> str:
-        return str(self.__login__)
+        return str(self._login)
 
     @login.setter
     def email(self, novoLogin: str) -> None:
-        self.__login__ = novoLogin    
+        self._login = novoLogin    
 
     
