@@ -9,10 +9,10 @@ ph = PasswordHasher()
 class Cliente(Base):
     __tablename__ = 'cliente' 
     
-    __id__ = Column(Integer, primary_key=True, autoincrement=True)
-    __nome__ = Column(String(200), nullable=False)
-    __senha__ = Column(String(225), nullable=False)
-    __email__ = Column(String(225), nullable=False)
+    __id__ = Column(Integer, primary_key=True, autoincrement=True, name="id")
+    __nome__ = Column(String(200), nullable=False, name="nome")
+    __senha__ = Column(String(225), nullable=False, name="senha")
+    __email__ = Column(String(225), nullable=False, name="email")
 
     enderecos = relationship("Endereco", secondary=cliente_endereco, backref="clientes")
 
@@ -48,11 +48,3 @@ class Cliente(Base):
     def email(self, novoEmail: str) -> None:
         self.__nome__ = novoEmail    
 
-    def __call__(self) -> dict:
-        return {
-            "mensagem":{
-                "id": self.id,
-                "nome": self.nome, 
-                "email": self.email
-                }
-            }

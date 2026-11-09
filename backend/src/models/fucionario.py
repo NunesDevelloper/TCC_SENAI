@@ -8,10 +8,10 @@ ph = PasswordHasher()
 class Funcionario(Base):
     __tablename__ = 'funcionario'
     
-    __id__ = Column(Integer, primary_key=True, autoincrement=True)
-    __nome__ = Column(String(120), nullable=False)
-    __login__ = Column(String(255), nullable=False)
-    __senha__ = Column(String(255), nullable=False)
+    __id__ = Column(Integer, primary_key=True, autoincrement=True, name="id")
+    __nome__ = Column(String(120), nullable=False, name="nome")
+    __login__ = Column(String(255), nullable=False, name="login")
+    __senha__ = Column(String(255), nullable=False, name="senha")
     
     turnos = relationship("Turno", backref="funcionario")
 
@@ -46,14 +46,5 @@ class Funcionario(Base):
     @login.setter
     def email(self, novoLogin: str) -> None:
         self.__login__ = novoLogin    
-
-    def __call__(self) -> dict:
-        return {
-            "mensagem":{
-                "id": self.id,
-                "nome": self.nome, 
-                "email": self.login
-                }
-            }
 
     

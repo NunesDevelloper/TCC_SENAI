@@ -12,10 +12,10 @@ class EnumCargo(enum):
 class Turno(Base):
     __tablename__ = 'turno'
     
-    __id__ = Column(Integer, primary_key=True, autoincrement=True)
-    __cargo__ = Column(Enum(EnumCargo), nullable=False)
-    __dt_inicio__ = Column(DateTime, nullable=False, default=datetime.now())
-    __dt_final__ = Column(DateTime, nullable=True)
+    __id__ = Column(Integer, primary_key=True, autoincrement=True, name="id")
+    __cargo__ = Column(Enum(EnumCargo), nullable=False, name="cargo")
+    __dt_inicio__ = Column(DateTime, nullable=False, default=datetime.now(), name="dt_inicio")
+    __dt_final__ = Column(DateTime, nullable=True, name="dt_final")
     
     funcionario_id = Column(Integer, ForeignKey('funcionario.id'), primary_key=True)
 
@@ -48,13 +48,4 @@ class Turno(Base):
     def dt_final(self, dt_final: datetime) -> datetime:
         self.__dt_final__ = dt_final
 
-    def __call__(self) -> dict:
-        return {
-            "mensagem":{
-                "id": self.id,
-                "cargo": self.cargo, 
-                "dt_inicial": self.dt_inicial,
-                "dt_final": self.dt_final
-                }
-            }
 
