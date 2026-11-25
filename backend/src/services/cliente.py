@@ -45,7 +45,7 @@ def alterar_dados_cliente(id: int, senha: str  | None, nome: str | None, session
         query = session.query(Cliente).filter_by(_id = id).first()
 
         if query:
-            if senha != None : query.nova_senha(senha)  
+            if senha != None : query.senha(senha)  
              
             if nome != None: query.nome = nome 
 
@@ -68,8 +68,8 @@ def dados_cliente(id: int, session: Session):
         if query is not None:
             return {
                 'mensagem':{
-                    'nome' : query.nome,
-                    'email' : query.email
+                    'nome' : query._nome,
+                    'email' : query._email
                 }
             }
         else: raise NoteUserSenha(session)
