@@ -38,5 +38,5 @@ async def Editar_User(base : BaseEditarCliente, id: int, session: Session = Depe
         OS DOIS PAREMETROS NÃO PODE SER Null\n \n \
     """
 
-    return alterar_dados_cliente(id, base.nome, base.senha, session)
+    return alterar_dados_cliente(id, base.senha, base.nome, session)
 
