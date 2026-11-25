@@ -20,10 +20,10 @@ class Carrinho(Base):
     _metedo_pagamento = Column(Enum(EnumMetedoPagamento),nullable=False,default= EnumMetedoPagamento.pix,
         name="metedo_pagamento"
     )
-    _cliente_id = Column(Integer, ForeignKey('cliente.id'), primary_key=True)
-    _funcionario_id = Column(Integer, ForeignKey('funcionario.id'), primary_key=True)
-    _mesa_id = Column(Integer, ForeignKey('mesa.id'), primary_key=True)
-    _cupom_desconto_id = Column(Integer, ForeignKey('cupom_desconto.id'), primary_key=True)
+    _cliente_id = Column(Integer, ForeignKey('cliente.id'))
+    _funcionario_id = Column(Integer, ForeignKey('funcionario.id'))
+    _mesa_id = Column(Integer, ForeignKey('mesa.id'))
+    _cupom_desconto_id = Column(Integer, ForeignKey('cupom_desconto.id'))
 
     historico = relationship("HistoricoPedidos", backref="carrinho")
 
