@@ -1,7 +1,9 @@
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
+from datetime import timedelta
 from pathlib import Path
 from os import getenv
+
 
 path_env = Path(__file__).resolve().parents[2] / ".env"
 
@@ -45,3 +47,26 @@ if DEBUG == "True":
         raise ERRO_ENV("A var \"DB_PORT\" não é do tipo int.")
 #endregion
 
+#region jwt
+SECRETES_KEY = getenv('SECRETES_KEY')
+if not SECRETES_KEY or not SECRETES_KEY.strip():
+    raise ERRO_ENV('O sistema precisa da SECRETES_KEY do JWT nas var de abiente/ .env com um valor válido')
+
+ALG = 'HS256'
+TIMER = timedelta(minutes=5)
+
+#endregion
+
+#region email
+EMAIL_GOOGLE = getenv("EMAIL_GOOGLE")
+if EMAIL_GOOGLE is None or not EMAIL_GOOGLE.strip():
+    raise ERRO_ENV('A var "EMAIL_GOOGLE" não pode está vazia.')
+
+SENHA_DE_APP = getenv("SENHA_DE_APP")
+if SENHA_DE_APP is None or not SENHA_DE_APP.strip():
+    raise ERRO_ENV('A var "SENHA_DE_APP" não pode está vazia.')
+
+DNS_BASE = getenv("DNS_BASE")
+if DNS_BASE is None or not DNS_BASE.strip():
+    raise ERRO_ENV('A var "DNS_BASE" não pode está vazia.')
+#endregion

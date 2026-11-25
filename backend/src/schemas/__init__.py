@@ -1,4 +1,5 @@
 from .cliente import BaseCriarCliente, BaseEditarCliente, BaseModel, ResponseDadosCliente
+from .auth import BaseEmailReset, BaseSenhaReset, ResponseToken
 from .geral import ResponseOk, Reposne500
 from .carrinho import BaseCriarCarrinho, BaseEditarCarrinho, ResponseDadosCarrinho
 from .combo import BaseCriarCombo, BaseEditarCombo, ResponseDadosCombo
@@ -26,7 +27,7 @@ from .produto import BaseCriarProduto, BaseEditarProduto, ResponseDadosProduto
 from .turno import BaseCriarTurno, BaseEditarTurno, ResponseDadosTurno
 
 __all__ = [
-	"ResponseOk", "Reposne500",
+	"ResponseOk", "Reposne500", "ResponseToken", "BaseEmailReset", "BaseSenhaReset",
     "BaseCriarCliente", "BaseEditarCliente", "BaseModel", "ResponseDadosCliente",
     "BaseCriarCarrinho", "BaseEditarCarrinho", "ResponseDadosCarrinho",
     "BaseCriarCombo", "BaseEditarCombo", "ResponseDadosCombo",

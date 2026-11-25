@@ -11,7 +11,8 @@ from .historico_pedidos import alterar_dados_historico_pedidos,criar_historico_p
 from .mesa import alterar_dados_mesa, criar_mesa, dados_mesa, del_mesa
 from .produto import alterar_dados_produto, criar_produto, dados_produto, del_produto
 from .turno import alterar_dados_turno, criar_turno, dados_turno, del_turno
-
+from .aut import logar_conta
+from .email import enviar_email, verificar_email_senha
 
 __all__ = [
     "alterar_dados_cliente", "criar_conta_cliente", "dados_cliente", "del_acont_cliente",
@@ -26,5 +27,6 @@ __all__ = [
     "alterar_dados_historico_pedidos", "criar_historico_pedidos", "dados_historico_pedidos", "del_historico_pedidos",
     "alterar_dados_mesa", "criar_mesa", "dados_mesa", "del_mesa",
     "alterar_dados_produto", "criar_produto", "dados_produto", "del_produto",
-    "alterar_dados_turno", "criar_turno", "dados_turno", "del_turno",
+    "alterar_dados_turno", "criar_turno", "dados_turno", "del_turno","logar_conta",
+    "enviar_email", "verificar_email_senha"
 ]

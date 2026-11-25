@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
+from .auth import Rotas_Auth
 from .cliente import Rotas_Cliente
 from .carrinho import Rotas_Carrinho
 from .combo import Rotas_Combo
@@ -27,6 +28,13 @@ mr = APIRouter(
 @mr.get("/", include_in_schema=False)
 async def root_to_docs() -> RedirectResponse:
     return RedirectResponse("/docs")
+
+#Rotas_Auth
+mr.include_router(
+    Rotas_Auth,
+    prefix="/auth",
+    tags=["auth"]
+    )
 
 #Rotas_Cliente
 mr.include_router(

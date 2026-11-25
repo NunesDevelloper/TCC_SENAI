@@ -37,7 +37,7 @@ class Funcionario(Base):
         self._senha = ph.hash(novaSenha)
 
     def verificarSenha(self, senha: str) -> bool:
-        return ph.verify(self._senha == senha)
+        return ph.verify(self._senha , senha)
 
     @property
     def login(self) -> str:

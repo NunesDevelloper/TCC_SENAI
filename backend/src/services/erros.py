@@ -191,6 +191,51 @@ class RequestInvalida(HTTPException):
             status_code=422,
             detail= "Nem um campo devidamente informado"
         )
+
+class JwtInvalido(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido ou expirado"
+        )
+
+class JwtNotEmail(HTTPException):
+    def __init__(self, session: Session):
+        session.rollback()
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token de redefinição inválido ou já utilizado"
+        )
+
+class FuncioanroAllow(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso permitido somente para clientes"
+        )
+
+class JustFucioanrio(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso permitido somente para funcionários"
+        )
+
+class AutStmpServer(HTTPException):
+    def __init__(self, session: Session):
+        session.rollback()
+        super().__init__(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Falha na autenticação do servidor de e-mail"
+        )
+
+class StmpIndisponivel(HTTPException):
+    def __init__(self, session: Session):
+        session.rollback()
+        super().__init__(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Servidor de e-mail indisponível"
+        )
 #endregion
 
     
