@@ -1,6 +1,28 @@
 from sqlalchemy.orm import Session
-from ..models import Fornecedor
-from .erros import RequestInvalida, ErroInesperado, NoteFornecedor
+from ..models import Estoque, Fornecedor
+from .erros import ErroInesperado,EstoqueJaPossuiFornecedor,FornecedorPossuiEstoque,NoteEstoque,NoteFornecedor,RequestInvalida
+
+def associar_fornecedor_estoque(fornecedor_id: int,estoque_id: int,session: Session,) -> dict:
+    try:
+        query_f = session.query(Fornecedor).filter_by(_id=fornecedor_id).first()
+        if query_f is None:
+            raise NoteFornecedor(session)
+
+        query_e = session.query(Estoque).filter_by(_id=estoque_id).with_for_update().first()
+
+        if query_e is None:
+            raise NoteEstoque(session)
+
+        if query_e.fornecedores:
+            raise EstoqueJaPossuiFornecedor(session)
+
+        query_e.fornecedores.append(query_f)
+        session.commit()
+        return {"mensagem": "fornecedor associado ao ingrediente com sucesso"}
+    except (EstoqueJaPossuiFornecedor,NoteEstoque,NoteFornecedor):
+        raise
+    except Exception as e:
+        raise ErroInesperado(e, session)
 
 
 def criar_fornecedor(cnpj: str, nome: str, contato: str, session: Session) -> dict:
@@ -16,15 +38,17 @@ def criar_fornecedor(cnpj: str, nome: str, contato: str, session: Session) -> di
 
 def del_fornecedor(id: int, session: Session) -> dict:
     try:
-        query = session.query(Fornecedor).filter_by(_id=id).delete()
-
-        if query:
-            session.commit()
-            return {"mensagem": "fornecedor removido."}
-        else:
+        query = session.query(Fornecedor).filter_by(_id=id).first()
+        if query is None:
             raise NoteFornecedor(session)
+        if query.estoques:
+            raise FornecedorPossuiEstoque(session)
 
-    except NoteFornecedor:
+        session.delete(query)
+        session.commit()
+        return {"mensagem": "fornecedor removido."}
+
+    except (FornecedorPossuiEstoque, NoteFornecedor):
         raise
 
     except Exception as e:

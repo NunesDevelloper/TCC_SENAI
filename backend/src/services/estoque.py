@@ -1,31 +1,41 @@
 from sqlalchemy.orm import Session
-from ..models import Estoque, EnumUnidadeMedida
-from .erros import RequestInvalida, ErroInesperado, NoteEstoque
+from ..models import Estoque, EnumUnidadeMedida, Fornecedor
+from .erros import ErroInesperado,EstoquePossuiFornecedor,EstoqueUsadoEmProduto,NoteEstoque,NoteFornecedor,RequestInvalida
 
 
-def criar_estoque(item_nome: str, preco_uni: float, quantidade: str, session: Session,
+def criar_estoque(item_nome: str, preco_uni: float, quantidade: str, fornecedor_id: int, session: Session,
                   unidade_medida: EnumUnidadeMedida = EnumUnidadeMedida.Uni) -> dict:
     try:
-        estoque: Estoque
+        query_f = session.query(Fornecedor).filter_by(_id=fornecedor_id).first()
+        if query_f is None:
+            raise NoteFornecedor(session)
+
         estoque = Estoque(item_nome, preco_uni, quantidade, unidade_medida)
+        estoque.fornecedores.append(query_f)
         session.add(estoque)
         session.commit()
         return {'mensagem': 'estoque criado com sucesso'}
+    except NoteFornecedor:
+        raise
     except Exception as e:
         raise ErroInesperado(e, session)
 
 
 def del_estoque(id: int, session: Session) -> dict:
     try:
-        query = session.query(Estoque).filter_by(_id=id).delete()
-
-        if query:
-            session.commit()
-            return {"mensagem": "estoque removido."}
-        else:
+        query = session.query(Estoque).filter_by(_id=id).first()
+        if query is None:
             raise NoteEstoque(session)
+        if query.produtos:
+            raise EstoqueUsadoEmProduto(session)
+        if query.fornecedores:
+            raise EstoquePossuiFornecedor(session)
 
-    except NoteEstoque:
+        session.delete(query)
+        session.commit()
+        return {"mensagem": "estoque removido."}
+
+    except (EstoquePossuiFornecedor, EstoqueUsadoEmProduto, NoteEstoque):
         raise
 
     except Exception as e:

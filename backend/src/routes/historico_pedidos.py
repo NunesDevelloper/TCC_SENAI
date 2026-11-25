@@ -12,6 +12,7 @@ from ..services import (
 Rotas_HistoricoPedidos = APIRouter(
     responses={
         404: {"description": "Não há histórico de pedidos com esse id"},
+        409: {"description": "O histórico de status é permanente"},
         401: {"description": "Não autorizado"}
     }
 )

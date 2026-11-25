@@ -1,15 +1,18 @@
 from sqlalchemy.orm import Session
 from ..models import Combo
-from .erros import RequestInvalida, ErroInesperado, NoteCombo
-
+from .erros import ErroInesperado, NoteCombo, PrecoComboNegativo, RequestInvalida
 
 def criar_combo(nome: str, preco: float, session: Session, desc: str | None = None) -> dict:
     try:
+        if preco < 0:
+            raise PrecoComboNegativo(session)
         combo: Combo
         combo = Combo(nome, preco, desc)
         session.add(combo)
         session.commit()
         return {'mensagem': 'combo criado com sucesso'}
+    except PrecoComboNegativo:
+        raise
     except Exception as e:
         raise ErroInesperado(e, session)
 
@@ -36,6 +39,8 @@ def alterar_dados_combo(id: int, nome: str | None, preco: float | None, desc: st
         query = session.query(Combo).filter_by(_id=id).first()
 
         if query:
+            if preco is not None and preco < 0:
+                raise PrecoComboNegativo(session)
             if nome is not None: query._nome = nome
             if preco is not None: query._preco = preco
             if desc is not None: query._desc = desc
@@ -48,7 +53,7 @@ def alterar_dados_combo(id: int, nome: str | None, preco: float | None, desc: st
         session.commit()
         return {'mensagem': 'combo editado com sucesso.'}
 
-    except (NoteCombo, RequestInvalida):
+    except (NoteCombo, PrecoComboNegativo, RequestInvalida):
         raise
 
     except Exception as e:

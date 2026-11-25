@@ -6,6 +6,7 @@ class BaseCriarEstoque(BaseModel):
     item_nome: str
     preco_uni: float
     quantidade: str
+    fornecedor_id: int
     unidade_medida: EnumUnidadeMedida = EnumUnidadeMedida.Uni
 
 

@@ -6,7 +6,8 @@ from ..services import alterar_dados_estoque, criar_estoque, dados_estoque, del_
 
 Rotas_Estoque = APIRouter(
     responses={
-        404: {"description": "Não há estoque com esse id"},
+        404: {"description": "Não há estoque ou fornecedor com esse id"},
+        409: {"description": "O ingrediente está associado a produtos ou fornecedor"},
         401: {"description": "Não autorizado"}
     }
 )
@@ -14,7 +15,7 @@ Rotas_Estoque = APIRouter(
 
 @Rotas_Estoque.post("/criar_estoque", response_model=ResponseOk)
 async def criar_Estoque(base: BaseCriarEstoque, session: Session = Depends(get_sesion)):
-    return criar_estoque(base.item_nome, base.preco_uni, base.quantidade, session, base.unidade_medida)
+    return criar_estoque(base.item_nome,base.preco_uni,base.quantidade,base.fornecedor_id,session,base.unidade_medida,)
 
 
 @Rotas_Estoque.get("/", response_model=ResponseDadosEstoque)

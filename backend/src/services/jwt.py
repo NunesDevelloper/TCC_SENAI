@@ -64,20 +64,52 @@ def verificar_jwt(token: str) -> tuple:
 def verificar_jwt_user(token = Depends(oauth_schema)) -> int:
     try:
         id, is_fucionario = verificar_jwt(token)
-        
-        if is_fucionario == True: raise FuncioanroAllow()
+        if not isinstance(is_fucionario, bool):
+            raise JwtInvalido()
+        if is_fucionario:
+            raise FuncioanroAllow()
 
         return int(id)
 
-    except (JwtInvalido, FuncioanroAllow): raise
+    except (JwtInvalido, FuncioanroAllow):
+        raise
     
-    except Exception as e: raise ErroInesperado(e)
+    except Exception as e:
+        raise ErroInesperado(e)
+
+def verificar_jwt_autenticado(token = Depends(oauth_schema)) -> int:
+    try:
+        id, tipo_usuario = verificar_jwt(token)
+        if not isinstance(tipo_usuario, bool):
+            raise JwtInvalido()
+        return int(id)
+
+    except JwtInvalido:
+        raise
+
+    except Exception as e:
+        raise ErroInesperado(e)
+
+def verificar_jwt_identidade(token = Depends(oauth_schema)) -> tuple[int, bool]:
+    try:
+        id, tipo_usuario = verificar_jwt(token)
+        if not isinstance(tipo_usuario, bool):
+            raise JwtInvalido()
+        return int(id), tipo_usuario
+
+    except JwtInvalido:
+        raise
+
+    except Exception as e:
+        raise ErroInesperado(e)
 
 def verificar_jwt_fucionario(token = Depends(oauth_schema)) -> int:
     try:
         id, is_fucionario = verificar_jwt(token)
-        
-        if is_fucionario == False: raise JustFucioanrio()
+        if not isinstance(is_fucionario, bool):
+            raise JwtInvalido()
+        if not is_fucionario:
+            raise JustFucioanrio()
 
         return int(id)
     

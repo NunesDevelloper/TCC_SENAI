@@ -7,6 +7,7 @@ from ..services import alterar_dados_turno, criar_turno, dados_turno, del_turno
 Rotas_Turno = APIRouter(
     responses={
         404: {"description": "Não há turno com esse id"},
+        409: {"description": "O período do turno viola as regras de negócio"},
         401: {"description": "Não autorizado"}
     }
 )

@@ -1,17 +1,21 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 from ..models import CupomDesconto
-from .erros import RequestInvalida, ErroInesperado, NoteCupomDesconto
+from .erros import ErroInesperado,NoteCupomDesconto,PercentualCupomInvalido,RequestInvalida,ValidadeCupomInvalida
 
-
-def criar_cupom_desconto(id: int, codigo: str, percentual_desconto: float,
-                         dt_valida: datetime, session: Session) -> dict:
+def criar_cupom_desconto(id: int, codigo: str, percentual_desconto: float, dt_valida: datetime, session: Session) -> dict:
     try:
-        cupom: CupomDesconto
+        if not 0 < percentual_desconto <= 100:
+            raise PercentualCupomInvalido(session)
+        agora =  datetime.now()
+        if dt_valida <= agora:
+            raise ValidadeCupomInvalida(session)
         cupom = CupomDesconto(id, codigo, percentual_desconto, dt_valida)
         session.add(cupom)
         session.commit()
         return {'mensagem': 'cupom de desconto criado com sucesso'}
+    except (PercentualCupomInvalido, ValidadeCupomInvalida):
+        raise
     except Exception as e:
         raise ErroInesperado(e, session)
 
@@ -39,6 +43,12 @@ def alterar_dados_cupom_desconto(id: int, codigo: str | None,
         query = session.query(CupomDesconto).filter_by(_id=id).first()
 
         if query:
+            if percentual_desconto is not None and not 0 < percentual_desconto <= 100:
+                raise PercentualCupomInvalido(session)
+            if dt_valida is not None:
+                agora = datetime.now(dt_valida.tzinfo) if dt_valida.tzinfo else datetime.now()
+                if dt_valida <= agora:
+                    raise ValidadeCupomInvalida(session)
             if codigo is not None: query.codigo = codigo
             if percentual_desconto is not None: query.percentual_desconto = percentual_desconto
             if dt_valida is not None: query.dt_valida = dt_valida
@@ -51,7 +61,7 @@ def alterar_dados_cupom_desconto(id: int, codigo: str | None,
         session.commit()
         return {'mensagem': 'cupom de desconto editado com sucesso.'}
 
-    except (NoteCupomDesconto, RequestInvalida):
+    except (NoteCupomDesconto,PercentualCupomInvalido,RequestInvalida,ValidadeCupomInvalida):
         raise
 
     except Exception as e:

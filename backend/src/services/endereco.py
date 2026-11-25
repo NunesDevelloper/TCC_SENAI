@@ -1,42 +1,55 @@
 from sqlalchemy.orm import Session
-from ..models import Endereco
-from .erros import RequestInvalida, ErroInesperado, NoteEndereco
+from ..models import Cliente, Endereco
+from .erros import ErroInesperado, NoteEndereco, NoteUserSenha, RequestInvalida
 
 
-def criar_endereco(logradouro: str, bairro: str, cep: str, session: Session,
-                   numero: int | None = None, complemento: str | None = None) -> dict:
+def criar_endereco(logradouro: str, bairro: str, cep: str, cliente_id: int,
+                   session: Session, numero: int | None = None,
+                   complemento: str | None = None) -> dict:
     try:
+        cliente = session.query(Cliente).filter_by(_id=cliente_id).first()
+        if cliente is None:
+            raise NoteUserSenha(session)
+
         endereco: Endereco
         endereco = Endereco(logradouro, bairro, cep, numero, complemento)
+        cliente.enderecos.append(endereco)
         session.add(endereco)
         session.commit()
         return {'mensagem': 'endereço criado com sucesso'}
+    except NoteUserSenha:
+        raise
     except Exception as e:
         raise ErroInesperado(e, session)
 
 
-def del_endereco(id: int, session: Session) -> dict:
+def del_endereco(id: int, cliente_id: int, session: Session) -> dict:
     try:
-        query = session.query(Endereco).filter_by(_id=id).delete()
+        cliente = session.query(Cliente).filter_by(_id=cliente_id).first()
+        if cliente is None:
+            raise NoteUserSenha(session)
 
-        if query:
-            session.commit()
-            return {"mensagem": "endereço removido."}
-        else:
+        query = session.query(Endereco).join(Endereco.clientes).filter(Endereco._id == id, Cliente._id == cliente_id).first()
+
+        if query is None:
             raise NoteEndereco(session)
 
-    except NoteEndereco:
+        cliente.enderecos.remove(query)
+        if not query.clientes:
+            session.delete(query)
+        session.commit()
+        return {"mensagem": "endereço removido."}
+    except (NoteEndereco, NoteUserSenha):
         raise
-
     except Exception as e:
         raise ErroInesperado(e, session)
 
 
-def alterar_dados_endereco(id: int, logradouro: str | None, bairro: str | None,
-                           cep: str | None, numero: int | None,
-                           complemento: str | None, session: Session) -> dict:
+def alterar_dados_endereco(id: int, logradouro: str | None, bairro: str | None, cep: str | None, numero: int | None,complemento: str | None, 
+                           cliente_id: int,session: Session) -> dict:
     try:
-        query = session.query(Endereco).filter_by(_id=id).first()
+        query = session.query(Endereco).join(Endereco.clientes).filter(Endereco._id == id, Cliente._id == cliente_id).first()
+        
 
         if query:
             if logradouro is not None: query.logradouro = logradouro
@@ -56,14 +69,13 @@ def alterar_dados_endereco(id: int, logradouro: str | None, bairro: str | None,
 
     except (NoteEndereco, RequestInvalida):
         raise
-
     except Exception as e:
         raise ErroInesperado(e, session)
 
 
-def dados_endereco(id: int, session: Session):
+def dados_endereco(id: int, cliente_id: int, session: Session):
     try:
-        query = session.query(Endereco).filter_by(_id=id).first()
+        query = session.query(Endereco).join(Endereco.clientes).filter(Endereco._id == id, Cliente._id == cliente_id).first()
 
         if query is not None:
             return {

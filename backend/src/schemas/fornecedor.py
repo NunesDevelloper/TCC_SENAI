@@ -13,6 +13,11 @@ class BaseEditarFornecedor(BaseModel):
     contato: str | None = None
 
 
+class BaseAssociarFornecedorEstoque(BaseModel):
+    fornecedor_id: int
+    estoque_id: int
+
+
 class ResponseDadosFornecedor(BaseModel):
     class DicReponse(BaseModel):
         cnpj: str

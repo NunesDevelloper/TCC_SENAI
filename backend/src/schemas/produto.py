@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from ..models import EnumCategoria
 
 
@@ -7,6 +7,7 @@ class BaseCriarProduto(BaseModel):
     nome: str
     preco: float
     desc: str
+    estoque_ids: list[int] = Field(min_length=1)
 
 
 class BaseEditarProduto(BaseModel):
@@ -14,6 +15,11 @@ class BaseEditarProduto(BaseModel):
     nome: str | None = None
     preco: float | None = None
     desc: str | None = None
+
+
+class BaseAssociarIngredienteProduto(BaseModel):
+    produto_id: int
+    estoque_id: int
 
 
 class ResponseDadosProduto(BaseModel):
