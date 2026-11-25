@@ -90,3 +90,22 @@ def dados_estoque(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_estoque(session: Session) -> dict:
+    try:
+        itens = session.query(Estoque).order_by(Estoque._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": item.id,
+                    "item_nome": item.item_nome,
+                    "preco_uni": item.preco_uni,
+                    "quantidade": item.quantidade,
+                    "unidade_medida": item.unidade_medida,
+                }
+                for item in itens
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

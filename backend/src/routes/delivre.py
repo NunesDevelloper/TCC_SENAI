@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseAssociarPedidoDelivre,BaseCriarDelivre,BaseEditarDelivre,ResponseDadosDelivre,ResponseOk
-from ..services import alterar_dados_delivre,associar_pedido_delivre,criar_delivre,dados_delivre,del_delivre
+from ..services import alterar_dados_delivre,associar_pedido_delivre,criar_delivre,dados_delivre,del_delivre,listar_delivres,verificar_jwt_fucionario
 
 
 Rotas_Delivre = APIRouter(
@@ -27,6 +27,11 @@ async def associar_Pedido(base: BaseAssociarPedidoDelivre,session: Session = Dep
 @Rotas_Delivre.get("/", response_model=ResponseDadosDelivre)
 async def dados_Delivre(id: int, session: Session = Depends(get_sesion)):
     return dados_delivre(id, session)
+
+
+@Rotas_Delivre.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_Delivres(session: Session = Depends(get_sesion)):
+    return listar_delivres(session)
 
 
 @Rotas_Delivre.delete("/", response_model=ResponseOk)

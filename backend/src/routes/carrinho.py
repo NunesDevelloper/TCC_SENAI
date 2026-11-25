@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseCriarCarrinho, BaseEditarCarrinho, ResponseDadosCarrinho, ResponseOk
-from ..services import alterar_dados_carrinho,criar_carrinho,dados_carrinho,del_carrinho,verificar_jwt_identidade
+from ..services import alterar_dados_carrinho,criar_carrinho,dados_carrinho,del_carrinho,listar_carrinhos,verificar_jwt_fucionario,verificar_jwt_identidade
 
 Rotas_Carrinho = APIRouter(
     responses={
@@ -24,6 +24,11 @@ async def criar_Carrinho(base: BaseCriarCarrinho,identidade: tuple[int, bool] = 
 @Rotas_Carrinho.get("/", response_model=ResponseDadosCarrinho)
 async def dados_Carrinho(id: int,identidade: tuple[int, bool] = Depends(verificar_jwt_identidade),session: Session = Depends(get_sesion),):
     return dados_carrinho(id, session, identidade)
+
+
+@Rotas_Carrinho.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_Carrinhos(session: Session = Depends(get_sesion)):
+    return listar_carrinhos(session)
 
 
 @Rotas_Carrinho.delete("/", response_model=ResponseOk)

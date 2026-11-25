@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseCriarCombo, BaseEditarCombo, ResponseDadosCombo, ResponseOk
-from ..services import alterar_dados_combo,criar_combo,dados_combo,del_combo,verificar_jwt_fucionario
+from ..services import alterar_dados_combo,criar_combo,dados_combo,del_combo,listar_combos,verificar_jwt_fucionario
 
 
 Rotas_Combo = APIRouter(
@@ -22,6 +22,11 @@ async def criar_Combo(base: BaseCriarCombo, session: Session = Depends(get_sesio
 @Rotas_Combo.get("/", response_model=ResponseDadosCombo)
 async def dados_Combo(id: int, session: Session = Depends(get_sesion)):
     return dados_combo(id, session)
+
+
+@Rotas_Combo.get("/todos")
+async def todos_Combos(session: Session = Depends(get_sesion)):
+    return listar_combos(session)
 
 
 @Rotas_Combo.delete( "/", response_model=ResponseOk, dependencies=[Depends(verificar_jwt_fucionario)],)

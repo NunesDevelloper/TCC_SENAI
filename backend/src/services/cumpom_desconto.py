@@ -88,3 +88,21 @@ def dados_cupom_desconto(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_cupons_desconto(session: Session) -> dict:
+    try:
+        cupons = session.query(CupomDesconto).order_by(CupomDesconto._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": cupom._id,
+                    "codigo": cupom.codigo,
+                    "percentual_desconto": cupom.percentual_desconto,
+                    "dt_valida": cupom.dt_valida,
+                }
+                for cupom in cupons
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

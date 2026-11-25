@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseCriarMesa, BaseEditarMesa, ResponseDadosMesa, ResponseOk
-from ..services import alterar_dados_mesa, criar_mesa, dados_mesa, del_mesa
+from ..services import alterar_dados_mesa, criar_mesa, dados_mesa, del_mesa, listar_mesas, verificar_jwt_fucionario
 
 Rotas_Mesa = APIRouter(
     responses={
@@ -20,6 +20,11 @@ async def criar_Mesa(base: BaseCriarMesa, session: Session = Depends(get_sesion)
 @Rotas_Mesa.get("/", response_model=ResponseDadosMesa)
 async def dados_Mesa(id: int, session: Session = Depends(get_sesion)):
     return dados_mesa(id, session)
+
+
+@Rotas_Mesa.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_Mesas(session: Session = Depends(get_sesion)):
+    return listar_mesas(session)
 
 
 @Rotas_Mesa.delete("/", response_model=ResponseOk)

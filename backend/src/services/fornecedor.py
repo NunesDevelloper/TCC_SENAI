@@ -100,3 +100,21 @@ def dados_fornecedor(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_fornecedores(session: Session) -> dict:
+    try:
+        fornecedores = session.query(Fornecedor).order_by(Fornecedor._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": fornecedor.id,
+                    "cnpj": fornecedor.cnpj,
+                    "nome": fornecedor.nome,
+                    "contato": fornecedor.contato,
+                }
+                for fornecedor in fornecedores
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

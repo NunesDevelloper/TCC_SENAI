@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseAssociarFornecedorEstoque,BaseCriarFornecedor,BaseEditarFornecedor,ResponseDadosFornecedor,ResponseOk
-from ..services import alterar_dados_fornecedor,associar_fornecedor_estoque,criar_fornecedor,dados_fornecedor,del_fornecedor
+from ..services import alterar_dados_fornecedor,associar_fornecedor_estoque,criar_fornecedor,dados_fornecedor,del_fornecedor,listar_fornecedores,verificar_jwt_fucionario
 
 Rotas_Fornecedor = APIRouter(
     responses={
@@ -26,6 +26,11 @@ async def associar_Estoque(base: BaseAssociarFornecedorEstoque,session: Session 
 @Rotas_Fornecedor.get("/", response_model=ResponseDadosFornecedor)
 async def dados_Fornecedor(id: int, session: Session = Depends(get_sesion)):
     return dados_fornecedor(id, session)
+
+
+@Rotas_Fornecedor.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_Fornecedores(session: Session = Depends(get_sesion)):
+    return listar_fornecedores(session)
 
 
 @Rotas_Fornecedor.delete("/", response_model=ResponseOk)

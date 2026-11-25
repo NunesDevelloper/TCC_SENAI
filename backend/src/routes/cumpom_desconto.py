@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseCriarCupomDesconto, BaseEditarCupomDesconto, ResponseDadosCupomDesconto, ResponseOk
-from ..services import alterar_dados_cupom_desconto,criar_cupom_desconto,dados_cupom_desconto,del_cupom_desconto,verificar_jwt_fucionario
+from ..services import alterar_dados_cupom_desconto,criar_cupom_desconto,dados_cupom_desconto,del_cupom_desconto,listar_cupons_desconto,verificar_jwt_fucionario
 
 Rotas_CupomDesconto = APIRouter(
     responses={
@@ -20,6 +20,11 @@ async def criar_CupomDesconto(base: BaseCriarCupomDesconto, session: Session = D
 @Rotas_CupomDesconto.get("/", response_model=ResponseDadosCupomDesconto)
 async def dados_CupomDesconto(id: int, session: Session = Depends(get_sesion)):
     return dados_cupom_desconto(id, session)
+
+
+@Rotas_CupomDesconto.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_CuponsDesconto(session: Session = Depends(get_sesion)):
+    return listar_cupons_desconto(session)
 
 
 @Rotas_CupomDesconto.delete("/",response_model=ResponseOk,dependencies=[Depends(verificar_jwt_fucionario)],)

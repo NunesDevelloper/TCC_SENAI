@@ -71,3 +71,16 @@ def dados_mesa(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_mesas(session: Session) -> dict:
+    try:
+        mesas = session.query(Mesa).order_by(Mesa._id).all()
+        return {
+            "mensagem": [
+                {"id": mesa.id, "numero": mesa.numero}
+                for mesa in mesas
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

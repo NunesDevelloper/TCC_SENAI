@@ -104,3 +104,16 @@ def dados_delivre(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_delivres(session: Session) -> dict:
+    try:
+        delivres = session.query(Delivre).order_by(Delivre._id).all()
+        return {
+            "mensagem": [
+                {"id": delivre._id, "nome": delivre._nome}
+                for delivre in delivres
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

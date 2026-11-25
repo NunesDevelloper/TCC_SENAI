@@ -95,3 +95,22 @@ def dados_turno(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_turnos(session: Session) -> dict:
+    try:
+        turnos = session.query(Turno).order_by(Turno._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": turno.id,
+                    "cargo": turno._cargo,
+                    "funcionario_id": turno.funcionario_id,
+                    "dt_inicio": turno._dt_inicio,
+                    "dt_final": turno._dt_final,
+                }
+                for turno in turnos
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

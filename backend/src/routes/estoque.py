@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseCriarEstoque, BaseEditarEstoque, ResponseDadosEstoque, ResponseOk
-from ..services import alterar_dados_estoque, criar_estoque, dados_estoque, del_estoque
+from ..services import alterar_dados_estoque, criar_estoque, dados_estoque, del_estoque, listar_estoque, verificar_jwt_fucionario
 
 Rotas_Estoque = APIRouter(
     responses={
@@ -21,6 +21,11 @@ async def criar_Estoque(base: BaseCriarEstoque, session: Session = Depends(get_s
 @Rotas_Estoque.get("/", response_model=ResponseDadosEstoque)
 async def dados_Estoque(id: int, session: Session = Depends(get_sesion)):
     return dados_estoque(id, session)
+
+
+@Rotas_Estoque.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_Estoque(session: Session = Depends(get_sesion)):
+    return listar_estoque(session)
 
 
 @Rotas_Estoque.delete("/", response_model=ResponseOk)

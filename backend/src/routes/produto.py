@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseAssociarIngredienteProduto,BaseCriarProduto,BaseEditarProduto,ResponseDadosProduto,ResponseOk
-from ..services import alterar_dados_produto,associar_ingrediente_produto,criar_produto,dados_produto,del_produto,verificar_jwt_fucionario
+from ..services import alterar_dados_produto,associar_ingrediente_produto,criar_produto,dados_produto,del_produto,listar_produtos,verificar_jwt_fucionario
 
 Rotas_Produto = APIRouter(
     responses={
@@ -26,6 +26,11 @@ async def associar_Ingrediente(base: BaseAssociarIngredienteProduto,session: Ses
 @Rotas_Produto.get("/", response_model=ResponseDadosProduto)
 async def dados_Produto(id: int, session: Session = Depends(get_sesion)):
     return dados_produto(id, session)
+
+
+@Rotas_Produto.get("/todos")
+async def todos_Produtos(session: Session = Depends(get_sesion)):
+    return listar_produtos(session)
 
 
 @Rotas_Produto.delete("/",response_model=ResponseOk,dependencies=[Depends(verificar_jwt_fucionario)])

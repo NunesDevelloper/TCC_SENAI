@@ -60,3 +60,24 @@ def dados_historico_pedidos(id: int, session: Session) -> dict:
         raise
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_historico_pedidos(session: Session) -> dict:
+    try:
+        historicos = session.query(HistoricoPedidos).order_by(HistoricoPedidos._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": historico.id,
+                    "carrinho_id": historico.carrinho_id,
+                    "status": (
+                        historico._status.value
+                        if hasattr(historico._status, "value")
+                        else str(historico._status)
+                    ),
+                }
+                for historico in historicos
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

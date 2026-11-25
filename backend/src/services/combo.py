@@ -80,3 +80,21 @@ def dados_combo(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_combos(session: Session) -> dict:
+    try:
+        combos = session.query(Combo).order_by(Combo._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": combo.id,
+                    "nome": combo._nome,
+                    "preco": combo._preco,
+                    "desc": combo._descricao,
+                }
+                for combo in combos
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

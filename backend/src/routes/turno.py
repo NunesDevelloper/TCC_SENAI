@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseCriarTurno, BaseEditarTurno, ResponseDadosTurno, ResponseOk
-from ..services import alterar_dados_turno, criar_turno, dados_turno, del_turno
+from ..services import alterar_dados_turno, criar_turno, dados_turno, del_turno, listar_turnos, verificar_jwt_fucionario
 
 Rotas_Turno = APIRouter(
     responses={
@@ -21,6 +21,11 @@ async def criar_Turno(base: BaseCriarTurno, session: Session = Depends(get_sesio
 @Rotas_Turno.get("/", response_model=ResponseDadosTurno)
 async def dados_Turno(id: int, session: Session = Depends(get_sesion)):
     return dados_turno(id, session)
+
+
+@Rotas_Turno.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_Turnos(session: Session = Depends(get_sesion)):
+    return listar_turnos(session)
 
 
 @Rotas_Turno.delete("/", response_model=ResponseOk)

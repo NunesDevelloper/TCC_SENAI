@@ -224,3 +224,25 @@ def historico_pedidos_cliente(cliente_id: int, session: Session) -> dict:
         return {"pedidos": pedidos}
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_carrinhos(session: Session) -> dict:
+    try:
+        carrinhos = session.query(Carrinho).order_by(Carrinho._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": carrinho.id,
+                    "cliente_id": carrinho._cliente_id,
+                    "funcionario_id": carrinho._funcionario_id,
+                    "mesa_id": carrinho._mesa_id,
+                    "cupom_desconto_id": carrinho._cupom_desconto_id,
+                    "is_delivre": carrinho.is_delivre,
+                    "is_retirada": carrinho.is_retirada,
+                    "metedo_pagamento": carrinho._metedo_pagamento,
+                }
+                for carrinho in carrinhos
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)

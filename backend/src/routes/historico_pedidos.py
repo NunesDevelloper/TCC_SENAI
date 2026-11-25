@@ -2,12 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..db import get_sesion
 from ..schemas import BaseCriarHistoricoPedidos, BaseEditarHistoricoPedidos, ResponseDadosHistoricoPedidos, ResponseOk
-from ..services import (
-    alterar_dados_historico_pedidos,
-    criar_historico_pedidos,
-    dados_historico_pedidos,
-    del_historico_pedidos,
-)
+from ..services import alterar_dados_historico_pedidos,criar_historico_pedidos,dados_historico_pedidos,del_historico_pedidos,listar_historico_pedidos,verificar_jwt_fucionario
 
 Rotas_HistoricoPedidos = APIRouter(
     responses={
@@ -26,6 +21,11 @@ async def criar_HistoricoPedidos(base: BaseCriarHistoricoPedidos, session: Sessi
 @Rotas_HistoricoPedidos.get("/", response_model=ResponseDadosHistoricoPedidos)
 async def dados_HistoricoPedidos(id: int, session: Session = Depends(get_sesion)):
     return dados_historico_pedidos(id, session)
+
+
+@Rotas_HistoricoPedidos.get("/todos", dependencies=[Depends(verificar_jwt_fucionario)])
+async def todos_HistoricoPedidos(session: Session = Depends(get_sesion)):
+    return listar_historico_pedidos(session)
 
 
 @Rotas_HistoricoPedidos.delete("/", response_model=ResponseOk)

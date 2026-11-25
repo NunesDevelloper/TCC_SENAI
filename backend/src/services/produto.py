@@ -121,3 +121,22 @@ def dados_produto(id: int, session: Session):
 
     except Exception as e:
         raise ErroInesperado(e, session)
+
+
+def listar_produtos(session: Session) -> dict:
+    try:
+        produtos = session.query(Produto).order_by(Produto._id).all()
+        return {
+            "mensagem": [
+                {
+                    "id": produto.id,
+                    "categoria": produto._categoria,
+                    "nome": produto._nome,
+                    "preco": produto._preco,
+                    "desc": produto._descricao,
+                }
+                for produto in produtos
+            ]
+        }
+    except Exception as e:
+        raise ErroInesperado(e, session)
