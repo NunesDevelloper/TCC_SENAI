@@ -18,6 +18,23 @@ services:
     volumes:
       - db:/var/lib/mysql
 
+  redis:
+    image: redis:7
+    container_name: db_redis
+    restart: always
+    expose:
+      - "6379"
+    command: redis-server --appendonly yes --requirepass ${DB_PASSWORD:?Defina a var DB_PASSWORD no .env}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  
 volumes:
   db:
+  redis_data:
       
